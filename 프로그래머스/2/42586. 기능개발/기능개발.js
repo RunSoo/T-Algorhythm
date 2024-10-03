@@ -1,31 +1,18 @@
 function solution(progresses, speeds) {
     var answer = [];
     
-    const queue = new Array();
-    for (let i=0; i<progresses.length; i++){
-        queue.push([progresses[i], i]);
+    const days = new Array(progresses.length).fill(0);
+    for (let d=0; d<days.length; d++){
+        days[d] = Math.floor((100-progresses[d]+speeds[d]-1)/speeds[d]);
     }
-
-    let idx=0;
-    while (queue.length>0){
-    // for (let j=0; j<progresses.length; j++){
-        let done = 0;
-        let len = queue.length;
-        let front = 0;
-        for (let i=0; i<len; i++){
-            const progress = queue.shift();
-            const result = progress[0]+speeds[progress[1]];
-            if (result>=100 && front==0) {
-                done++;
-            }
-            else {
-                queue.push([result, progress[1]]);
-                front++;
-            }
-            
+    while (days.length>0){
+        const top = days.shift();
+        let cnt = 1;
+        while (days.length>0 && days[0]<=top){
+            days.shift();
+            cnt++;
         }
-        if (done>0) answer.push(done);
-        idx++;
+        answer.push(cnt);
     }
     
     return answer;
