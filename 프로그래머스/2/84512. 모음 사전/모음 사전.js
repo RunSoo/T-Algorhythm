@@ -1,18 +1,27 @@
+const set = new Set();
+const alp = ['A', 'E', 'I', 'O', 'U'];
+
 function solution(word) {
-    var answer = 0;
-    
-    let prec = new Array(5).fill(0);
-    
-    prec[4]=1;
-    for (let i=3; i>=0; i--){
-        prec[i] = prec[i+1]*5+1;
+    for (let i=0; i<alp.length; i++){
+        makeLetter(alp[i], 1);
     }
-    
-    let alphabet = ['A', 'E', 'I', 'O', 'U'];
-    
-    for (let i=0; i<word.length; i++){
-        answer+=alphabet.indexOf(word[i])*prec[i]+1;
+    const allLetters = [];
+    for (let str of set){
+        allLetters.push(str);
     }
+    allLetters.sort((a, b)=>(a+b)-(b+a));
+    return allLetters.indexOf(word)+1;
+}
+
+function makeLetter(letter, idx){
     
-    return answer;
+    if (!set.has(letter)){
+        set.add(letter);
+    }
+    if (idx===5){
+        return;
+    }
+    for (let i=0; i<alp.length; i++){
+        makeLetter(letter+alp[i], idx+1);
+    }
 }
