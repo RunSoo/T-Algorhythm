@@ -1,31 +1,46 @@
-function solution(numbers) {
-    var answer = 0;
-    
-    function isPrime(n) {
-        if (n < 2) return false;
-        for (let i = 2; i <= Math.sqrt(n); i++) {
-            if (n % i == 0) return false;
-        }
-        return true;
-    }
+const set = new Set();
 
-    const prime = new Set();
-    
-    let nums = numbers.split('');
-    
-    function permutate(arr, num){
-        if (arr.length >=1) {
-            for (let i=0; i<arr.length; i++){
-                const result = num + arr[i];
-                const newArr = [...arr];
-                newArr.splice(i, 1);
-                if (isPrime(result)) prime.add(Number(result));
-                permutate(newArr, result);
-            }
-        }
+function solution(numbers) {
+    const visited = new Array(numbers.length).fill(false);
+    for (let i=0; i<numbers.length; i++){
+        visited[i]=true;
+        makeNumber(Number(numbers[i]), visited, 0, numbers);
+        visited[i]=false;
+    }
+    console.log(set);
+    let cnt=0;
+    for (let i of set){
+        if (isPrime(i)) cnt++;
     }
     
-    permutate(nums, '');
+    return cnt;
+}
+
+function isPrime(num){
+    if (num===1 || num===0) return false;
+    if (num===2) return true;
+    for (let i=2; i<=Math.sqrt(num); i++){
+        if (num%i===0) return false;
+    }
+    return true;
+}
+
+function makeNumber(curNum, visited, idx, numbers){
+    if (!set.has(curNum)){
+        set.add(curNum);
+    }
+    if (idx===numbers.length){
+        return;
+    }
+    if (visited.every(el=>el===true)){
+        return;
+    }
     
-    return prime.size;
+    for (let i=0; i<numbers.length; i++){
+        if (!visited[i]){
+            visited[i]=true;
+            makeNumber(Number(curNum+""+numbers[i]), visited, idx+1, numbers);
+            visited[i]=false;
+        }
+    }
 }
