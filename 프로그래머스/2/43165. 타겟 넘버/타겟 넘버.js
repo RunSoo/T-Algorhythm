@@ -1,10 +1,16 @@
+let cnt = 0;
 function solution(numbers, target) {
-    function dfs(index, sum) {
-        if (index === numbers.length) {
-            return sum === target ? 1 : 0;
-        }
-        return dfs(index + 1, sum + numbers[index]) + dfs(index + 1, sum - numbers[index]);
-    }
+    dfs(numbers, target, 0, 0);
+    return cnt;
+}
 
-    return dfs(0, 0);
+function dfs(numbers, target, idx, number){
+    if (idx===numbers.length){
+        if (number===target) {
+            cnt++;
+        }
+        return;
+    }
+    dfs(numbers, target, idx+1, number+numbers[idx]);
+    dfs(numbers, target, idx+1, number-numbers[idx]);
 }
