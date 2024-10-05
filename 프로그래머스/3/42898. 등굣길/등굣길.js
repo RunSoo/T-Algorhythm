@@ -1,31 +1,26 @@
 function solution(m, n, puddles) {
-    const rest = 1000000007;
-    const dp = Array.from({ length: n }, () => Array(m).fill(0));
-    
-    dp[0][0] = 1; 
+    const MOD = 1000000007;
+
+    const map = Array.from({ length: m }, () => new Array(n).fill(0));
 
     puddles.forEach(([x, y]) => {
-        dp[y - 1][x - 1] = -1;
+        map[x - 1][y - 1] = -1;
     });
 
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < m; j++) {
-            if (dp[i][j] === -1) {
-                dp[i][j] = 0; 
+    map[0][0] = 1;
+
+    for (let r = 0; r < m; r++) {
+        for (let c = 0; c < n; c++) {
+            if (map[r][c] === -1) {
+                map[r][c] = 0;
                 continue;
             }
 
-            if (i > 0) {
-                dp[i][j] += dp[i - 1][j];
-                dp[i][j] %= rest;
-            }
-
-            if (j > 0) {
-                dp[i][j] += dp[i][j - 1];
-                dp[i][j] %= rest;
-            }
+            if (r > 0) map[r][c] += map[r - 1][c];
+            if (c > 0) map[r][c] += map[r][c - 1];
+            map[r][c] %= MOD;
         }
     }
-    
-    return dp[n - 1][m - 1];
+
+    return map[m - 1][n - 1];
 }
