@@ -1,35 +1,28 @@
+const dr = [-1, 1, 0, 0];
+const dc = [0, 0, -1, 1];
+
 function solution(maps) {
-    let answer = 1;
-    
-    let n = maps.length;
-    let m = maps[0].length;
-    
-    let dx=[-1, 0, 1, 0], dy = [0, 1, 0, -1];
-    
-    let queue = [];
-    
-    queue.push([0, 0]);
-    
-    let visited = maps;
-    
-    while(queue.length>0){
-        let size = queue.length;
-        
-        for (let i=0; i<size; i++){
-            let [x, y] = queue.shift();
-            for (let j=0; j<4; j++){
-                if (x+dx[j]>=0 && x+dx[j]<n && y+dy[j]>=0 && y+dy[j]<m && visited[x+dx[j]][y+dy[j]]===1){
-                    if (x+dx[j]==n-1 && y+dy[j]===m-1){
-                        return answer+1;
-                    }
-                    queue.push([x+dx[j], y+dy[j]]);
-                    visited[x+dx[j]][y+dy[j]]=0;
-                }
-            }
-            
+    return bfs(maps);
+}
+
+function bfs(maps){
+    const queue = [];
+    queue.push([0, 0, 1]);
+    const visited = Array.from({length: maps.length}, ()=>new Array(maps[0].length).fill(false));
+    visited[0][0]=true;
+    while (queue.length>0){
+        const [r, c, dist] = queue.shift();
+        if (r===maps.length-1 && c===maps[0].length-1){
+            return dist;
         }
-        answer++;
+        for (let d=0; d<4; d++){
+            const nr = r+dr[d];
+            const nc = c+dc[d];
+            if (nr>=0 && nr<maps.length && nc>=0 && nc<maps[0].length && !visited[nr][nc] && maps[nr][nc]===1){
+                visited[nr][nc]=true;
+                queue.push([nr, nc, dist+1]);
+            }
+        }
     }
-    
     return -1;
 }
